@@ -38,6 +38,24 @@
       animation: spin .9s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Open-in-new-tab button (fallback if iframe is blocked) */
+    #openBtn {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      z-index: 20;
+      background: linear-gradient(135deg, #ff6b9d, #8b5cf6);
+      color: #fff;
+      border: 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-family: inherit;
+      box-shadow: 0 6px 18px rgba(0,0,0,.45);
+      display: none; /* shown after a short wait so the iframe has a chance to load */
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -46,6 +64,7 @@
     <div class="name">AWRAM AI</div>
     <div class="spinner"></div>
   </div>
+  <button id="openBtn" aria-label="Open generator in new tab">Open generator</button>
   <iframe id="awramFrame"
           title="AWRAM AI Image Generator"
           src="https://053f785f01f7d93281d9ddb316852c8a.perchance.org/awram-ai-image-generator-0-pro#embed"
@@ -56,6 +75,7 @@
     (function () {
       var frame = document.getElementById("awramFrame");
       var splash = document.getElementById("splash");
+      var openBtn = document.getElementById("openBtn");
       var done = false;
       function hide() {
         if (done) return;
@@ -65,7 +85,22 @@
         setTimeout(function () { splash.style.display = "none"; }, 500);
       }
       frame.addEventListener("load", hide);
-      setTimeout(hide, 8000); // safety net — never leave visitors on a blank screen
+      // safety net — never leave visitors on a blank screen
+      setTimeout(hide, 8000);
+
+      // Show the "Open generator" button after a short delay. Some providers block embedding
+      // using headers like X-Frame-Options or CSP; this gives visitors a direct way to open the
+      // generator in a new tab if embedding is blocked.
+      setTimeout(function () { openBtn.style.display = 'block'; }, 3500);
+
+      openBtn.addEventListener('click', function () {
+        try {
+          window.open(frame.src, '_blank', 'noopener');
+        } catch (e) {
+          // fallback: navigate the top window
+          window.location.href = frame.src;
+        }
+      });
     })();
   </script>
 </body>
