@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AWRAM AI — Free Unlimited AI Image Generator</title>
+<meta name="description" content="AWRAM AI — free, unlimited AI image generator.">
+<meta name="theme-color" content="#0a0a0e">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #0a0a0e; overflow: hidden; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+  /* the generator sits behind everything */
+  #awramFrame {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%; border: 0; display: block; background: #0a0a0e;
+  }
+
+  /* full-screen blur + tint layer that fades out on OK */
+  #overlay {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(8, 8, 12, 0.55);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    transition: opacity .12s cubic-bezier(.4, 0, .2, 1);
+    will-change: opacity;
+  }
+  body.leaving #overlay { opacity: 0; }
+
+  /* the caution card */
+  #popup {
+    width: min(430px, 92vw);
+    padding: 2rem 1.8rem 1.6rem;
+    text-align: center;
+    background: linear-gradient(180deg, #16161d, #101016);
+    border: 1px solid rgba(255, 107, 157, .35);
+    border-radius: 20px;
+    box-shadow: 0 0 60px rgba(139, 92, 246, .35), 0 30px 60px rgba(0,0,0,.6);
+  }
+  #popup .logo {
+    width: 58px; height: 58px; margin: 0 auto .9rem; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #ff6b9d, #8b5cf6);
+    font-size: 28px; font-weight: 800; color: #fff;
+    box-shadow: 0 0 24px rgba(139,92,246,.5);
+  }
+  #popup .title { font-size: 15px; font-weight: 700; letter-spacing: .22em; color: #ddd; margin-bottom: 1.1rem; }
+  #popup .warn { font-size: 12px; font-weight: 800; letter-spacing: .3em; color: #ff6b6b; margin-bottom: .5rem; }
+  #popup .text { font-size: 14.5px; line-height: 1.55; color: #bbb; margin-bottom: 1.4rem; }
+  #popup .text b { color: #ff8ab0; }
+  #popup #okBtn {
+    width: 100%; padding: .75rem; border: 0; border-radius: 12px; cursor: pointer;
+    background: linear-gradient(135deg, #ff6b9d, #8b5cf6);
+    color: #fff; font-size: 16px; font-weight: 800; letter-spacing: .12em;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  #popup #okBtn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  #popup #okBtn:active { transform: translateY(0); }
+  #popup .foot { margin-top: .9rem; font-size: 11px; color: #555; }
+
+  /* full-screen "loading" screen that covers the redirect */
+  #fade {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    background: #0a0a0e; color: #eee;
+    opacity: 0; pointer-events: none;
+    transition: opacity .12s cubic-bezier(.4, 0, .2, 1);
+    will-change: opacity;
+  }
+  body.leaving #fade { opacity: 1; pointer-events: auto; }
+  #fade .logo {
+    width: 56px; height: 56px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #ff6b9d, #8b5cf6);
+    font-size: 28px; font-weight: 800; color: #fff;
+    box-shadow: 0 0 30px rgba(139,92,246,.45);
+    opacity: .9;
+  }
+</style>
+</head>
+<body>
+
+<!-- the generator, always behind the popup -->
+<iframe id="awramFrame"
+        title="AWRAM AI Image Generator"
+        src="https://053f785f01f7d93281d9ddb316852c8a.perchance.org/awram-ai-image-generator-0-pro"
+        allow="clipboard-write; fullscreen; encrypted-media; web-share; picture-in-picture"
+        allowfullscreen></iframe>
+
+<!-- caution popup -->
+<div id="overlay">
+  <div id="popup">
+    <div class="logo">A</div>
+    <div class="title">AWRAM AI</div>
+    <div class="warn">&#9888; CAUTION</div>
+    <div class="text">This site is highly <b>uncensored</b> and may <b>rot your brain</b>.<br>Proceed at your own heart.</div>
+    <button id="okBtn">OK</button>
+    <div class="foot">AWRAM AI &mdash; free unlimited image generation</div>
+  </div>
+</div>
+
+<!-- smooth full-screen hand-off to the generator -->
+<div id="fade">
+  <div class="logo">A</div>
+</div>
+
+<script>
+  (function () {
+    var okBtn = document.getElementById("okBtn");
+    var GENERATOR_URL = "https://053f785f01f7d93281d9ddb316852c8a.perchance.org/awram-ai-image-generator-0-pro";
+
+    function go() {
+      // snap the screen dark instantly, then swap pages immediately
+      document.body.classList.add("leaving");
+      setTimeout(function () {
+        window.location.replace(GENERATOR_URL);
+      }, 140);
+    }
+
+    okBtn.addEventListener("click", go);
+    okBtn.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+    });
+  })();
+</script>
+</body>
+</html>
